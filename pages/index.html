@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="config.js"></script>
+  <script src="component.js"></script>
+</head>
+
+<body>
+  <hosted-search-page id="hsp"></hosted-search-page>
+  <script>
+    var hostedSearchPage = document.getElementById('hsp');
+    hostedSearchPage.configure({
+      orgId: demoConfig.orgId,
+      // The best practice would be to use a dedicated api key with read privilege on Hosted Search pages only.
+      // For the demo we will use the same as used to configure endpoint.
+      apiKey: demoConfig.token, 
+      pageId: 'b195084a-ab98-477a-947b-5c140df8ec10'
+    });
+
+    document.addEventListener('CoveoScriptsLoaded', function () {
+      Coveo.SearchEndpoint.configureCloudV2Endpoint(demoConfig.orgId, demoConfig.token);
+      Coveo.init(hostedSearchPage.searchPage.querySelector('.CoveoSearchInterface'), {});
+    });
+  </script>
+</body>
+</html>
