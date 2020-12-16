@@ -43,7 +43,20 @@ export * from '@coveops/hosted-search-page'
 Place the component in your markup:
 
 ```html
-<div class="CoveoHostedSearchPage"></div>
+<hosted-search-page id="hsp"></hosted-search-page>
+<script>
+  var hostedSearchPage = document.getElementById('hsp');
+  hostedSearchPage.configure({
+    orgId: 'YOUR_COVEO_ORG_ID',
+    apiKey: 'YOUR_SEARCH_PAGES_API_KEY', 
+    pageId: 'YOUR_HOSTED_SEARCH_PAGE_ID'
+  });
+
+  document.addEventListener('CoveoScriptsLoaded', function () {
+    Coveo.SearchEndpoint.configureCloudV2Endpoint('YOUR_COVEO_ORG_ID', 'YOUR_TOKEN');
+    Coveo.init(hostedSearchPage.searchPage.querySelector('.CoveoSearchInterface'), {});
+  });
+</script>
 ```
 
 ## Extending
