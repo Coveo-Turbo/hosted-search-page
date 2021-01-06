@@ -27,6 +27,7 @@ export interface IHostedSearchPageOptions {
 
 export interface IHostedSearchPageState {
   scriptsLoaded: number,
+  inlineScriptsInjected: number,
   error: string
 }
 
@@ -61,6 +62,7 @@ export class HostedSearchPage extends HTMLElement {
     this.searchPage = this._root.querySelector('#hostedSearchPage');
     this.state = {
       scriptsLoaded: 0,
+      inlineScriptsInjected:0,
       error: ''
     }
   }
@@ -111,15 +113,22 @@ export class HostedSearchPage extends HTMLElement {
           element.addEventListener('load', () => {
               this.state = {
                   scriptsLoaded: this.state.scriptsLoaded + 1,
+                  inlineScriptsInjected: this.state.inlineScriptsInjected,
                   error: this.state.error
               };
-              this.coveoScriptsLoaded();
+              this.coveoExternalScriptsLoaded();
           }, { once: true });
           this._attachShadow ? this._root.insertBefore(element, this._searchPage) : document.head.appendChild(element);
         } else {
-          document.addEventListener('CoveoScriptsLoaded', () => {
+          document.addEventListener('CoveoExternalScriptsLoaded', () => {
             element.insertAdjacentHTML('beforeend', script.InlineContent);
             this._attachShadow ? this._root.insertBefore(element, this._searchPage) : document.head.appendChild(element);
+            this.state = {
+                scriptsLoaded: this.state.scriptsLoaded,
+                inlineScriptsInjected: this.state.inlineScriptsInjected + 1,
+                error: this.state.error
+            };
+            this.coveoScriptsLoaded();
           })
         }
       });
@@ -146,8 +155,14 @@ export class HostedSearchPage extends HTMLElement {
     }
   }
 
-  private coveoScriptsLoaded() {
+  private coveoExternalScriptsLoaded() {
       if (this.state.scriptsLoaded === this._searchPageScripts.filter(s => s.URL).length) {
+        document.dispatchEvent(new CustomEvent("CoveoExternalScriptsLoaded"));
+      }
+  }
+
+  private coveoScriptsLoaded() {
+      if (this.state.inlineScriptsInjected === this._searchPageScripts.filter(s => s.InlineContent).length) {
         document.dispatchEvent(new CustomEvent("CoveoScriptsLoaded"));
       }
   }
