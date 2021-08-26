@@ -1,7 +1,3 @@
-#!make
-include .env
-export
-
 default:	| setup build
 
 init:
