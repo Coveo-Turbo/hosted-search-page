@@ -206,4 +206,7 @@ export class HostedSearchPage extends HTMLElement {
   }
 }
 
-customElements.define('hosted-search-page', HostedSearchPage);
+//customElements.define does not gracefully handle duplicate declarations.
+if (!customElements.get('hosted-search-page')) {
+  customElements.define('hosted-search-page', HostedSearchPage); 
+}
