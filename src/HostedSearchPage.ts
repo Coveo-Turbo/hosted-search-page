@@ -67,9 +67,9 @@ export class HostedSearchPage extends HTMLElement {
     }
   }
 
-  getModel() {
+  getModel(): Promise<void> {
     const {orgId, pageId, apiKey } = this._options;
-    return new Promise((res, rej) => {
+    return new Promise<void>((res, rej) => {
       fetch(`https://platform.cloud.coveo.com/rest/organizations/${orgId}/pages/${pageId}`, {
         headers: new Headers({
           'Authorization': `Bearer ${apiKey}`
@@ -84,13 +84,12 @@ export class HostedSearchPage extends HTMLElement {
     })
   }
 
-  public configure(options: IHostedSearchPageOptions){
+  public configure(options: IHostedSearchPageOptions): Promise<void>{
     this.options = options;
-    this.getModel();
+    return this.getModel();
   }
 
   private renderSearchPage(data: IHostedSearchPage){
-    console.log(data);
     this.searchPage.innerHTML = data.html;
     if(!this.options.htmlOnly){
       this.addScriptFiles(data);

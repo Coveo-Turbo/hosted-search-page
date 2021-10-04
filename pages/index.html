@@ -9,7 +9,7 @@
   <hosted-search-page id="hsp"></hosted-search-page>
   <script>
     var hostedSearchPage = document.getElementById('hsp');
-    hostedSearchPage.configure({
+    var hostedSearchPageLoading = hostedSearchPage.configure({
       orgId: demoConfig.orgId,
       // The best practice would be to use a dedicated api key with read privilege on Hosted Search pages only.
       // For the demo we will use the same as used to configure endpoint.
@@ -17,7 +17,14 @@
       pageId: 'b195084a-ab98-477a-947b-5c140df8ec10'
     });
 
-    document.addEventListener('CoveoScriptsLoaded', function () {
+    /* for testing purposes */
+    const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+    
+    const criticalHSPs = [hostedSearchPageLoading, wait(5*1000)];
+
+    document.addEventListener('CoveoScriptsLoaded', async function () {
+      await Promise.all(criticalHSPs);
+      console.log('All promises are now completed! Ready to initialize Coveo');
       Coveo.SearchEndpoint.configureCloudV2Endpoint(demoConfig.orgId, demoConfig.token);
       Coveo.init(hostedSearchPage.searchPage.querySelector('.CoveoSearchInterface'), {});
     });
