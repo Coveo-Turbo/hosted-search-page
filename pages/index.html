@@ -14,13 +14,13 @@
       // The best practice would be to use a dedicated api key with read privilege on Hosted Search pages only.
       // For the demo we will use the same as used to configure endpoint.
       apiKey: demoConfig.token, 
-      pageId: 'b195084a-ab98-477a-947b-5c140df8ec10'
+      pageId: 'ff2893fe-85e4-454e-9e40-fa55fe1b9be6'
     });
 
     /* for testing purposes */
     const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
     
-    const criticalHSPs = [hostedSearchPageLoading, wait(5*1000)];
+    const criticalHSPs = [hostedSearchPageLoading];
 
     document.addEventListener('CoveoScriptsLoaded', async function () {
       await Promise.all(criticalHSPs);

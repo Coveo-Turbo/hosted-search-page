@@ -22,7 +22,8 @@ export interface IHostedSearchPageOptions {
   orgId: string,
   pageId: string,
   apiKey: string,
-  htmlOnly?: boolean
+  htmlOnly?: boolean,
+  restUri?: string
 }
 
 export interface IHostedSearchPageState {
@@ -37,7 +38,8 @@ export class HostedSearchPage extends HTMLElement {
     orgId:'',
     pageId: '',
     apiKey: '',
-    htmlOnly: false
+    htmlOnly: false,
+    restUri: 'https://platform.cloud.coveo.com'
   };
   private _searchPage: HTMLElement;
   private _searchPageScripts: Array<IHostedSearchPageAsset>;
@@ -68,9 +70,9 @@ export class HostedSearchPage extends HTMLElement {
   }
 
   getModel(): Promise<void> {
-    const {orgId, pageId, apiKey } = this._options;
+    const {orgId, pageId, apiKey, restUri } = this._options;
     return new Promise<void>((res, rej) => {
-      fetch(`https://platform.cloud.coveo.com/rest/organizations/${orgId}/pages/${pageId}`, {
+      fetch(`${restUri}/rest/organizations/${orgId}/pages/${pageId}`, {
         headers: new Headers({
           'Authorization': `Bearer ${apiKey}`
         })
